@@ -23,6 +23,7 @@ export const SORENESS_AREAS = [
   "Ankles",
   "Feet",
   "Shoulders",
+  "Achilles",
 ] as const;
 
 /** Turns "" / null into undefined so optional numeric inputs clear cleanly. */
