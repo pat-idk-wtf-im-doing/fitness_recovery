@@ -1,0 +1,69 @@
+import Link from "next/link";
+
+import type { Entry } from "@/lib/db/schema";
+import { INTENSITY_LABELS, type Intensity } from "@/lib/validation";
+
+function painTone(value: number): string {
+  if (value <= 3) return "bg-green-500/15 text-green-400";
+  if (value <= 6) return "bg-amber-500/15 text-amber-400";
+  return "bg-red-500/15 text-red-400";
+}
+
+function formatDate(iso: string): string {
+  // Parse as a plain date — no timezone shifting.
+  const [year, month, day] = iso.split("-").map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
+    weekday: "short",
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+}
+
+export function EntryCard({ entry }: { entry: Entry }) {
+  const stats = [
+    entry.steps != null ? `${entry.steps.toLocaleString()} steps` : null,
+    entry.carbsG != null ? `${entry.carbsG}g carbs` : null,
+    entry.sleepHours != null ? `${entry.sleepHours}h sleep` : null,
+    entry.rpe != null ? `RPE ${entry.rpe}` : null,
+  ].filter(Boolean);
+
+  return (
+    <Link
+      href={`/entry/${entry.id}`}
+      className="card block transition hover:border-ink-600"
+    >
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="font-semibold">{formatDate(entry.sessionDate)}</p>
+          {entry.intensity ? (
+            <p className="mt-0.5 text-sm text-ink-400">
+              {INTENSITY_LABELS[entry.intensity as Intensity]} intensity
+            </p>
+          ) : null}
+        </div>
+        <span
+          className={`shrink-0 rounded-lg px-2.5 py-1 text-sm font-bold tabular-nums ${painTone(entry.painRating)}`}
+        >
+          {entry.painRating}/10
+        </span>
+      </div>
+
+      {stats.length > 0 ? (
+        <p className="mt-2.5 text-sm text-ink-400">{stats.join(" · ")}</p>
+      ) : null}
+
+      {entry.sorenessAreas?.length ? (
+        <p className="mt-2 text-sm text-ink-300">
+          {entry.sorenessAreas.join(", ")}
+        </p>
+      ) : null}
+
+      {entry.comments ? (
+        <p className="mt-2 line-clamp-2 text-sm text-ink-400 italic">
+          “{entry.comments}”
+        </p>
+      ) : null}
+    </Link>
+  );
+}
