@@ -25,22 +25,25 @@ key. Hiding a custom field never deletes its historical values.
 
 ## Local setup
 
+You need a GitHub account and a Vercel account. That's it — the database is
+provisioned from inside Vercel as a native Marketplace integration, so there is no
+separate signup, no third-party dashboard and no credit card.
+
 ```powershell
 npm install
-Copy-Item .env.example .env.local
+npx vercel login
+npx vercel link
+npx vercel install neon
 ```
 
-Put a Postgres connection string in `.env.local`:
+`vercel install neon` creates the Postgres database, attaches it to the project, and
+pulls the credentials down. Then write them into `.env.local`:
 
+```powershell
+npx vercel env pull .env.local
 ```
-DATABASE_URL="postgresql://user:password@host/db?sslmode=require"
-```
 
-Get one either by running `vercel install neon` (provisions Neon through the Vercel
-Marketplace and injects `DATABASE_URL` into your project automatically), or by
-creating a project at neon.tech and copying the **pooled** connection string.
-
-Create the tables, then start the dev server:
+Create the tables and start the dev server:
 
 ```powershell
 npm run db:push
@@ -48,6 +51,9 @@ npm run dev
 ```
 
 Open http://localhost:3000.
+
+If you'd rather not use the CLI, do the deploy steps below first and then run
+`npx vercel env pull .env.local` to develop locally against the same database.
 
 ## Scripts
 
@@ -64,16 +70,24 @@ Open http://localhost:3000.
 
 ## Deploying to Vercel (free)
 
+All of this happens in the Vercel dashboard — you never leave it.
+
 1. Push this repo to GitHub.
 2. In Vercel, **Add New → Project** and import the repo. The defaults are correct;
-   no build settings need changing.
-3. Attach a database: in the project's **Storage** tab choose **Neon**, or run
-   `vercel install neon` from the project directory. Either way `DATABASE_URL` is
-   set for you. If you brought your own Postgres, add `DATABASE_URL` manually under
-   **Settings → Environment Variables** for all environments.
-4. Deploy.
-5. Apply the schema once against the production database — set `DATABASE_URL` in
-   your local `.env.local` to the production string and run `npm run db:push`.
+   no build settings need changing. Deploy it.
+3. Open the project's **Storage** tab → **Create Database** → **Neon**. Pick the
+   region nearest you and the **Free** plan, give it a name, and create it.
+   Vercel makes the account behind the scenes and injects `DATABASE_URL` into your
+   project's environment variables automatically.
+4. Redeploy so the new environment variable is picked up
+   (**Deployments** → latest → **Redeploy**).
+5. Apply the schema once against the production database:
+
+   ```powershell
+   npx vercel env pull .env.local
+   npm run db:push
+   ```
+
 6. On your phone, open the deployed URL and use **Add to Home Screen** to install it.
 
 ### Free-tier limits worth knowing
