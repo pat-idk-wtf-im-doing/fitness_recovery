@@ -22,16 +22,9 @@ export const SESSION_TYPE_LABELS: Record<SessionType, string> = {
 
 export const SORENESS_AREAS = [
   "Hamstrings",
-  "Quads",
-  "Calves",
-  "Glutes",
-  "Groin",
   "Hip flexors",
   "Lower back",
   "Knees",
-  "Ankles",
-  "Feet",
-  "Shoulders",
   "Achilles Tendon",
 ] as const;
 
