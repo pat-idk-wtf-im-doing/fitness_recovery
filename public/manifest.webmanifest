@@ -1,6 +1,6 @@
 {
   "name": "Recovery Log",
-  "short_name": "Recovery",
+  "short_name": "Pat's Recovery",
   "description": "Track how you feel the day after training.",
   "start_url": "/",
   "display": "standalone",
