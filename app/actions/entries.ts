@@ -34,6 +34,7 @@ export async function saveEntry(
 
   const parsed = entrySchema.safeParse({
     sessionDate: formData.get("sessionDate"),
+    sessionType: formData.get("sessionType"),
     painRating: formData.get("painRating"),
     steps: formData.get("steps"),
     carbsG: formData.get("carbsG"),
@@ -61,6 +62,7 @@ export async function saveEntry(
 
   const row = {
     sessionDate: values.sessionDate,
+    sessionType: values.sessionType ?? null,
     painRating: values.painRating,
     steps: values.steps ?? null,
     carbsG: values.carbsG ?? null,

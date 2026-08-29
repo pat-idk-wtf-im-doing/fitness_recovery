@@ -2,12 +2,23 @@ import Link from "next/link";
 
 import { formatIsoDate } from "@/lib/dates";
 import type { Entry } from "@/lib/db/schema";
-import { INTENSITY_LABELS, type Intensity } from "@/lib/validation";
+import {
+  INTENSITY_LABELS,
+  SESSION_TYPE_LABELS,
+  type Intensity,
+  type SessionType,
+} from "@/lib/validation";
 
 function painTone(value: number): string {
   if (value <= 3) return "bg-green-500/15 text-green-400";
   if (value <= 6) return "bg-amber-500/15 text-amber-400";
   return "bg-red-500/15 text-red-400";
+}
+
+function sessionTone(type: SessionType): string {
+  return type === "training"
+    ? "bg-accent/15 text-accent"
+    : "bg-ink-700 text-ink-300";
 }
 
 export function EntryCard({ entry }: { entry: Entry }) {
@@ -25,14 +36,23 @@ export function EntryCard({ entry }: { entry: Entry }) {
     >
       <div className="flex items-start justify-between gap-3">
         <div className="min-w-0">
-          <p className="font-semibold">
-            {formatIsoDate(entry.sessionDate, {
-              weekday: "short",
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
-          </p>
+          <div className="flex flex-wrap items-center gap-2">
+            <p className="font-semibold">
+              {formatIsoDate(entry.sessionDate, {
+                weekday: "short",
+                day: "numeric",
+                month: "short",
+                year: "numeric",
+              })}
+            </p>
+            {entry.sessionType ? (
+              <span
+                className={`rounded-md px-2 py-0.5 text-xs font-semibold ${sessionTone(entry.sessionType as SessionType)}`}
+              >
+                {SESSION_TYPE_LABELS[entry.sessionType as SessionType]}
+              </span>
+            ) : null}
+          </div>
           {entry.intensity ? (
             <p className="mt-0.5 text-sm text-ink-400">
               {INTENSITY_LABELS[entry.intensity as Intensity]} intensity

@@ -12,6 +12,14 @@ export const INTENSITY_LABELS: Record<Intensity, string> = {
   high: "High",
 };
 
+export const SESSION_TYPE_VALUES = ["training", "casual"] as const;
+export type SessionType = (typeof SESSION_TYPE_VALUES)[number];
+
+export const SESSION_TYPE_LABELS: Record<SessionType, string> = {
+  training: "Training",
+  casual: "Casual",
+};
+
 export const SORENESS_AREAS = [
   "Hamstrings",
   "Quads",
@@ -59,6 +67,10 @@ export const entrySchema = z.object({
       (value) => value <= todayIso(),
       { message: "Training date cannot be in the future." },
     ),
+  sessionType: z.preprocess(
+    blankToUndefined,
+    z.enum(SESSION_TYPE_VALUES).optional(),
+  ),
   painRating: z.coerce
     .number()
     .int()

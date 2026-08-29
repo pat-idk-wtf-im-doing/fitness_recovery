@@ -10,8 +10,11 @@ import type { Entry, FieldDefinition } from "@/lib/db/schema";
 import {
   INTENSITY_LABELS,
   INTENSITY_VALUES,
+  SESSION_TYPE_LABELS,
+  SESSION_TYPE_VALUES,
   SORENESS_AREAS,
   type Intensity,
+  type SessionType,
 } from "@/lib/validation";
 
 function painColor(value: number): string {
@@ -33,6 +36,9 @@ export function EntryForm({
   );
 
   const [pain, setPain] = useState(entry?.painRating ?? 3);
+  const [sessionType, setSessionType] = useState<SessionType | "">(
+    (entry?.sessionType as SessionType | null) ?? "",
+  );
   const [intensity, setIntensity] = useState<Intensity | "">(
     (entry?.intensity as Intensity | null) ?? "",
   );
@@ -64,6 +70,7 @@ export function EntryForm({
         <input key={area} type="hidden" name="sorenessAreas" value={area} />
       ))}
       <input type="hidden" name="intensity" value={intensity} />
+      <input type="hidden" name="sessionType" value={sessionType} />
 
       <div className="card space-y-5">
         <div>
@@ -85,6 +92,30 @@ export function EntryForm({
           {errors.sessionDate ? (
             <p className="field-error">{errors.sessionDate}</p>
           ) : null}
+        </div>
+
+        <div>
+          <span className="label">Session type</span>
+          <div className="grid grid-cols-2 gap-2">
+            {SESSION_TYPE_VALUES.map((value) => {
+              const selected = sessionType === value;
+              return (
+                <button
+                  key={value}
+                  type="button"
+                  onClick={() => setSessionType(selected ? "" : value)}
+                  aria-pressed={selected}
+                  className={`min-h-12 rounded-xl border text-base font-semibold transition active:scale-[0.98] ${
+                    selected
+                      ? "border-accent bg-accent text-ink-950"
+                      : "border-ink-600 bg-ink-800 text-ink-300 hover:bg-ink-700"
+                  }`}
+                >
+                  {SESSION_TYPE_LABELS[value]}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         <div>

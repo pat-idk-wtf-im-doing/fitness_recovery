@@ -15,6 +15,8 @@ import {
 } from "drizzle-orm/pg-core";
 export const intensityEnum = pgEnum("intensity", ["low", "medium", "high"]);
 
+export const sessionTypeEnum = pgEnum("session_type", ["training", "casual"]);
+
 export const fieldTypeEnum = pgEnum("field_type", [
   "number",
   "text",
@@ -34,6 +36,7 @@ export const entries = pgTable(
   {
     id: serial("id").primaryKey(),
     sessionDate: date("session_date").notNull(),
+    sessionType: sessionTypeEnum("session_type"),
     painRating: smallint("pain_rating").notNull(),
     steps: integer("steps"),
     carbsG: integer("carbs_g"),
