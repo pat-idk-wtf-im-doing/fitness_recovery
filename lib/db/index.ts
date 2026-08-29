@@ -22,5 +22,3 @@ export function getDb(): Database {
   instance ??= createDb();
   return instance;
 }
-
-export { schema };

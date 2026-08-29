@@ -2,23 +2,14 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
 
 import {
   commitImport,
   previewImport,
   type ImportState,
 } from "@/app/actions/import";
+import { SubmitButton } from "@/components/SubmitButton";
 import { SAMPLE_INPUT } from "@/lib/parse-notes";
-
-function SubmitButton({ label, busyLabel }: { label: string; busyLabel: string }) {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" className="btn-primary w-full" disabled={pending}>
-      {pending ? busyLabel : label}
-    </button>
-  );
-}
 
 export function ImportForm() {
   const [preview, previewAction] = useActionState<ImportState, FormData>(

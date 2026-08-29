@@ -1,18 +1,9 @@
 "use client";
 
 import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
 
 import { createField, type FieldFormState } from "@/app/actions/fields";
-
-function SubmitButton() {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" className="btn-primary w-full" disabled={pending}>
-      {pending ? "Adding…" : "Add field"}
-    </button>
-  );
-}
+import { SubmitButton } from "@/components/SubmitButton";
 
 export function NewFieldForm() {
   const [state, formAction] = useActionState<FieldFormState, FormData>(
@@ -96,7 +87,7 @@ export function NewFieldForm() {
         </p>
       ) : null}
 
-      <SubmitButton />
+      <SubmitButton label="Add field" busyLabel="Adding…" />
     </form>
   );
 }

@@ -6,6 +6,7 @@ import {
   type ScatterPoint,
   type TrendPoint,
 } from "@/components/Charts";
+import { formatIsoDate } from "@/lib/dates";
 import type { Entry, FieldDefinition } from "@/lib/db/schema";
 import { listEntries, listFieldDefinitions } from "@/lib/queries";
 import { describeCorrelation, mean, pearson, rollingAverage, round } from "@/lib/stats";
@@ -53,11 +54,7 @@ function buildFactors(fields: FieldDefinition[]): Factor[] {
 }
 
 function formatShortDate(iso: string): string {
-  const [year, month, day] = iso.split("-").map(Number);
-  return new Date(year, month - 1, day).toLocaleDateString(undefined, {
-    day: "numeric",
-    month: "short",
-  });
+  return formatIsoDate(iso, { day: "numeric", month: "short" });
 }
 
 export default async function InsightsPage() {

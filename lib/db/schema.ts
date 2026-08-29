@@ -86,5 +86,4 @@ export const fieldDefinitions = pgTable(
 );
 
 export type Entry = typeof entries.$inferSelect;
-export type NewEntry = typeof entries.$inferInsert;
 export type FieldDefinition = typeof fieldDefinitions.$inferSelect;

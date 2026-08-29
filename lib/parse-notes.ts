@@ -13,7 +13,6 @@ export type ParsedEntry = {
 };
 
 export type ParsedRow = {
-  source: string;
   entry: ParsedEntry;
   errors: string[];
 };
@@ -40,7 +39,7 @@ function toIso(year: number, month: number, day: number): string | null {
  * Handles the date formats people actually type: ISO, slash/dot separated
  * (day-first), and "13 Aug 2026" / "Aug 13 2026".
  */
-export function parseLooseDate(text: string): string | null {
+function parseLooseDate(text: string): string | null {
   const iso = text.match(/(\d{4})-(\d{1,2})-(\d{1,2})/);
   if (iso) return toIso(+iso[1], +iso[2], +iso[3]);
 
@@ -120,7 +119,7 @@ function parseNoteBlock(block: string): ParsedRow {
     entry.comments = leftovers.length > 0 ? leftovers.join(" ") : null;
   }
 
-  return { source: text, entry, errors: validate(entry) };
+  return { entry, errors: validate(entry) };
 }
 
 function validate(entry: ParsedEntry): string[] {
@@ -225,7 +224,7 @@ function parseCsv(text: string): ParsedRow[] {
       }
     });
 
-    return { source: line, entry, errors: validate(entry) };
+    return { entry, errors: validate(entry) };
   });
 }
 

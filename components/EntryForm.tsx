@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useActionState, useState } from "react";
-import { useFormStatus } from "react-dom";
 
 import { saveEntry, type EntryFormState } from "@/app/actions/entries";
+import { SubmitButton } from "@/components/SubmitButton";
+import { todayIso } from "@/lib/dates";
 import type { Entry, FieldDefinition } from "@/lib/db/schema";
 import {
   INTENSITY_LABELS,
@@ -17,15 +18,6 @@ function painColor(value: number): string {
   if (value <= 3) return "#4ade80";
   if (value <= 6) return "#fbbf24";
   return "#f87171";
-}
-
-function SubmitButton({ isEdit }: { isEdit: boolean }) {
-  const { pending } = useFormStatus();
-  return (
-    <button type="submit" className="btn-primary w-full" disabled={pending}>
-      {pending ? "Saving…" : isEdit ? "Save changes" : "Save entry"}
-    </button>
-  );
 }
 
 export function EntryForm({
@@ -54,7 +46,7 @@ export function EntryForm({
     ),
   );
 
-  const today = new Date().toISOString().slice(0, 10);
+  const today = todayIso();
   const errors = state.fieldErrors ?? {};
 
   function toggleSoreness(area: string) {
@@ -328,7 +320,10 @@ export function EntryForm({
           Cancel
         </Link>
         <div className="flex-1">
-          <SubmitButton isEdit={Boolean(entry)} />
+          <SubmitButton
+            label={entry ? "Save changes" : "Save entry"}
+            busyLabel="Saving…"
+          />
         </div>
       </div>
     </form>

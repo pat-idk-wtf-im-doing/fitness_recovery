@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+import { todayIso } from "@/lib/dates";
 import type { FieldDefinition } from "@/lib/db/schema";
 
 export const INTENSITY_VALUES = ["low", "medium", "high"] as const;
@@ -23,7 +24,7 @@ export const SORENESS_AREAS = [
   "Ankles",
   "Feet",
   "Shoulders",
-  "Achilles",
+  "Achilles Tendon",
 ] as const;
 
 /** Turns "" / null into undefined so optional numeric inputs clear cleanly. */
@@ -53,13 +54,9 @@ export const entrySchema = z.object({
       message: "That is not a real date.",
     })
     .refine(
-      (value) => {
-        // Compare as plain dates so a session logged "today" is always valid
-        // regardless of the viewer's timezone.
-        const today = new Date();
-        const todayStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-        return value <= todayStr;
-      },
+      // Compare as plain dates so a session logged "today" is always valid
+      // regardless of the viewer's timezone.
+      (value) => value <= todayIso(),
       { message: "Training date cannot be in the future." },
     ),
   painRating: z.coerce
@@ -84,9 +81,6 @@ export const entrySchema = z.object({
   custom: z.record(z.string(), z.unknown()).optional(),
 });
 
-export type EntryInput = z.input<typeof entrySchema>;
-export type EntryValues = z.output<typeof entrySchema>;
-
 export const fieldDefinitionSchema = z.object({
   label: z
     .string()
@@ -97,8 +91,6 @@ export const fieldDefinitionSchema = z.object({
   unit: z.string().trim().max(16).optional(),
   options: z.array(z.string().trim().min(1).max(40)).max(20).optional(),
 });
-
-export type FieldDefinitionInput = z.infer<typeof fieldDefinitionSchema>;
 
 export function slugifyFieldKey(label: string): string {
   return label

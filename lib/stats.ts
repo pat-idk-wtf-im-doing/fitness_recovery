@@ -71,26 +71,3 @@ export function round(value: number, places = 1): number {
   const factor = 10 ** places;
   return Math.round(value * factor) / factor;
 }
-
-/** Groups numeric values into readable buckets for the scatter summaries. */
-export function bucketAverages(
-  pairs: Array<[number, number]>,
-  bucketSize: number,
-): Array<{ bucket: string; average: number; count: number }> {
-  const groups = new Map<number, number[]>();
-
-  for (const [x, y] of pairs) {
-    const bucket = Math.floor(x / bucketSize) * bucketSize;
-    const existing = groups.get(bucket);
-    if (existing) existing.push(y);
-    else groups.set(bucket, [y]);
-  }
-
-  return [...groups.entries()]
-    .sort(([a], [b]) => a - b)
-    .map(([bucket, values]) => ({
-      bucket: `${bucket.toLocaleString()}–${(bucket + bucketSize).toLocaleString()}`,
-      average: round(mean(values)),
-      count: values.length,
-    }));
-}
