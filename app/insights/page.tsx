@@ -31,7 +31,6 @@ function buildFactors(fields: FieldDefinition[]): Factor[] {
       value: (entry) => (entry.sleepHours == null ? null : Number(entry.sleepHours)),
     },
     { label: "Water (ml)", value: (entry) => entry.hydrationMl },
-    { label: "RPE", value: (entry) => entry.rpe },
     {
       label: "Intensity",
       value: (entry) =>

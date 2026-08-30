@@ -47,7 +47,6 @@ export function EntryForm({
     Boolean(
       entry?.sleepHours ||
         entry?.hydrationMl ||
-        entry?.rpe ||
         entry?.sorenessAreas?.length,
     ),
   );
@@ -265,24 +264,6 @@ export function EntryForm({
                   <p className="field-error">{errors.hydrationMl}</p>
                 ) : null}
               </div>
-            </div>
-
-            <div>
-              <label htmlFor="rpe" className="label">
-                Session RPE (1–10)
-              </label>
-              <input
-                id="rpe"
-                name="rpe"
-                type="number"
-                inputMode="numeric"
-                min={1}
-                max={10}
-                placeholder="7"
-                defaultValue={entry?.rpe ?? ""}
-                className="input"
-              />
-              {errors.rpe ? <p className="field-error">{errors.rpe}</p> : null}
             </div>
 
             <div>

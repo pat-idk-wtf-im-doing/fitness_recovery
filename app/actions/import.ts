@@ -66,7 +66,6 @@ export async function commitImport(
     intensity: row.entry.intensity,
     sleepHours: row.entry.sleepHours != null ? String(row.entry.sleepHours) : null,
     hydrationMl: row.entry.hydrationMl,
-    rpe: row.entry.rpe,
     comments: row.entry.comments,
     updatedAt: new Date(),
   }));

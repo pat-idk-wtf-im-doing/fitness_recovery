@@ -26,7 +26,6 @@ export function EntryCard({ entry }: { entry: Entry }) {
     entry.steps != null ? `${entry.steps.toLocaleString()} steps` : null,
     entry.carbsG != null ? `${entry.carbsG}g carbs` : null,
     entry.sleepHours != null ? `${entry.sleepHours}h sleep` : null,
-    entry.rpe != null ? `RPE ${entry.rpe}` : null,
   ].filter(Boolean);
 
   return (

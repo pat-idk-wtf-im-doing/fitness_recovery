@@ -42,7 +42,6 @@ export async function saveEntry(
     sleepHours: formData.get("sleepHours"),
     sorenessAreas: formData.getAll("sorenessAreas").map(String),
     hydrationMl: formData.get("hydrationMl"),
-    rpe: formData.get("rpe"),
     comments: formData.get("comments"),
     custom: collectCustom(formData),
   });
@@ -70,7 +69,6 @@ export async function saveEntry(
     sleepHours: values.sleepHours != null ? String(values.sleepHours) : null,
     sorenessAreas: values.sorenessAreas?.length ? values.sorenessAreas : null,
     hydrationMl: values.hydrationMl ?? null,
-    rpe: values.rpe ?? null,
     comments: values.comments?.trim() ? values.comments.trim() : null,
     custom,
     updatedAt: new Date(),

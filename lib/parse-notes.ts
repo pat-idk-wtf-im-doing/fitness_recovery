@@ -8,7 +8,6 @@ export type ParsedEntry = {
   intensity: Intensity | null;
   sleepHours: number | null;
   hydrationMl: number | null;
-  rpe: number | null;
   comments: string | null;
 };
 
@@ -98,7 +97,6 @@ function parseNoteBlock(block: string): ParsedRow {
     intensity: parseIntensity(text),
     sleepHours: num(text, /sleep[^\d\n]{0,15}([\d.]+)/i),
     hydrationMl: num(text, /(?:water|hydration)[^\d\n]{0,15}([\d,]+)/i),
-    rpe: num(text, /rpe[^\d\n]{0,15}(\d{1,2})/i),
     comments: null,
   };
 
@@ -113,7 +111,7 @@ function parseNoteBlock(block: string): ParsedRow {
       .filter(
         (line) =>
           line.length > 0 &&
-          !/^\W*(pain|steps?|carb|intensity|sleep|water|hydration|rpe|date)\b/i.test(line) &&
+          !/^\W*(pain|steps?|carb|intensity|sleep|water|hydration|date)\b/i.test(line) &&
           !parseLooseDate(line),
       );
     entry.comments = leftovers.length > 0 ? leftovers.join(" ") : null;
@@ -127,7 +125,6 @@ function validate(entry: ParsedEntry): string[] {
   if (!entry.sessionDate) errors.push("No date found");
   if (entry.painRating == null) errors.push("No pain rating found");
   else if (entry.painRating < 0 || entry.painRating > 10) errors.push("Pain must be 0–10");
-  if (entry.rpe != null && (entry.rpe < 1 || entry.rpe > 10)) errors.push("RPE must be 1–10");
   if (entry.sleepHours != null && entry.sleepHours > 24) errors.push("Sleep looks wrong");
   return errors;
 }
@@ -176,7 +173,6 @@ const HEADER_ALIASES: Record<string, keyof ParsedEntry> = {
   water: "hydrationMl",
   hydration: "hydrationMl",
   hydrationml: "hydrationMl",
-  rpe: "rpe",
   comments: "comments",
   comment: "comments",
   notes: "comments",
@@ -195,7 +191,7 @@ function parseCsv(text: string): ParsedRow[] {
     const cells = splitCsvLine(line);
     const entry: ParsedEntry = {
       sessionDate: null, painRating: null, steps: null, carbsG: null,
-      intensity: null, sleepHours: null, hydrationMl: null, rpe: null, comments: null,
+      intensity: null, sleepHours: null, hydrationMl: null, comments: null,
     };
 
     headers.forEach((header, index) => {

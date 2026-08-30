@@ -44,7 +44,6 @@ export const entries = pgTable(
     sleepHours: numeric("sleep_hours", { precision: 3, scale: 1 }),
     sorenessAreas: text("soreness_areas").array(),
     hydrationMl: integer("hydration_ml"),
-    rpe: smallint("rpe"),
     comments: text("comments"),
     /** Values for user-defined fields, keyed by `fieldDefinitions.key`. */
     custom: jsonb("custom").$type<Record<string, unknown>>().notNull().default({}),

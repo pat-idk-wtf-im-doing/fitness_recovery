@@ -78,7 +78,6 @@ export const entrySchema = z.object({
   sleepHours: optionalFloat(0, 24),
   sorenessAreas: z.array(z.string().max(40)).max(20).optional(),
   hydrationMl: optionalInt(0, 20_000),
-  rpe: optionalInt(1, 10),
   comments: z
     .string()
     .max(2_000, { message: "Keep comments under 2000 characters." })
