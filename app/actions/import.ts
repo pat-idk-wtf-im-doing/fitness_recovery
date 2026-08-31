@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 
 import { getDb } from "@/lib/db";
+import { requireUnlocked } from "@/lib/auth";
 import { entries } from "@/lib/db/schema";
 import { isImportable, parseNotes, type ParsedRow } from "@/lib/parse-notes";
 import { listEntries } from "@/lib/queries";
@@ -22,6 +23,8 @@ export async function previewImport(
   _prevState: ImportState,
   formData: FormData,
 ): Promise<ImportState> {
+  await requireUnlocked();
+
   const text = String(formData.get("text") ?? "");
 
   if (!text.trim()) return { error: "Paste something first." };
@@ -49,6 +52,8 @@ export async function commitImport(
   _prevState: ImportState,
   formData: FormData,
 ): Promise<ImportState> {
+  await requireUnlocked();
+
   const text = String(formData.get("text") ?? "");
   if (!text.trim()) return { error: "Nothing to import." };
   if (text.length > MAX_INPUT_CHARS) return { error: "Input too large." };

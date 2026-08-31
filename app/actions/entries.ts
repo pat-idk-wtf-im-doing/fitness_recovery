@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { getDb } from "@/lib/db";
+import { requireUnlocked } from "@/lib/auth";
 import { entries } from "@/lib/db/schema";
 import { listFieldDefinitions } from "@/lib/queries";
 import { entrySchema, parseCustomValues } from "@/lib/validation";
@@ -29,6 +30,8 @@ export async function saveEntry(
   _prevState: EntryFormState,
   formData: FormData,
 ): Promise<EntryFormState> {
+  await requireUnlocked();
+
   const rawId = formData.get("id");
   const id = rawId ? Number(rawId) : null;
 
@@ -91,6 +94,8 @@ export async function saveEntry(
 }
 
 export async function deleteEntry(formData: FormData): Promise<void> {
+  await requireUnlocked();
+
   const id = z.coerce.number().int().positive().safeParse(formData.get("id"));
   if (!id.success) return;
 

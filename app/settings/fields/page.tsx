@@ -1,3 +1,4 @@
+import { lock } from "@/app/actions/auth";
 import { setFieldActive } from "@/app/actions/fields";
 import { listFieldDefinitions } from "@/lib/queries";
 
@@ -67,6 +68,12 @@ export default async function FieldsPage() {
           </p>
         </div>
       ) : null}
+
+      <form action={lock} className="pt-2">
+        <button type="submit" className="btn-secondary w-full">
+          Lock app
+        </button>
+      </form>
     </main>
   );
 }

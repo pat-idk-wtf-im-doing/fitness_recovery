@@ -13,6 +13,9 @@ const TABS = [
 export function Nav() {
   const pathname = usePathname();
 
+  // No point showing navigation on the PIN screen.
+  if (pathname === "/login") return null;
+
   return (
     <nav className="sticky bottom-0 z-10 border-t border-ink-700 bg-ink-900/95 backdrop-blur">
       <div className="mx-auto flex max-w-lg">

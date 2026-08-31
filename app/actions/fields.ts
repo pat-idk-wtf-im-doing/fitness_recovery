@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getDb } from "@/lib/db";
+import { requireUnlocked } from "@/lib/auth";
 import { fieldDefinitions } from "@/lib/db/schema";
 import {
   FIELD_KEY_REGEX,
@@ -18,6 +19,8 @@ export async function createField(
   _prevState: FieldFormState,
   formData: FormData,
 ): Promise<FieldFormState> {
+  await requireUnlocked();
+
   const rawOptions = String(formData.get("options") ?? "")
     .split(",")
     .map((option) => option.trim())
@@ -73,6 +76,8 @@ export async function createField(
 }
 
 export async function setFieldActive(formData: FormData): Promise<void> {
+  await requireUnlocked();
+
   const id = z.coerce.number().int().positive().safeParse(formData.get("id"));
   const active = formData.get("active") === "true";
   if (!id.success) return;
