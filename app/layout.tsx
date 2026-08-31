@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 import { Nav } from "@/components/Nav";
+import { SessionKeepAlive } from "@/components/SessionKeepAlive";
 
 export const metadata: Metadata = {
   title: "Recovery Log",
@@ -27,6 +28,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html lang="en" className="h-full antialiased">
       <body className="flex min-h-full flex-col">
+        <SessionKeepAlive />
         <div className="mx-auto w-full max-w-lg flex-1 px-4 pt-6 pb-4">
           {children}
         </div>

@@ -5,8 +5,8 @@ import { redirect } from "next/navigation";
 
 import {
   SESSION_COOKIE,
-  SESSION_MAX_AGE_SECONDS,
   createSessionToken,
+  sessionCookieOptions,
   verifyPin,
 } from "@/lib/session";
 
@@ -66,13 +66,11 @@ export async function unlock(
   attempts.delete(key);
 
   const cookieStore = await cookies();
-  cookieStore.set(SESSION_COOKIE, await createSessionToken(), {
-    httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
-    path: "/",
-    maxAge: SESSION_MAX_AGE_SECONDS,
-  });
+  cookieStore.set(
+    SESSION_COOKIE,
+    await createSessionToken(),
+    sessionCookieOptions,
+  );
 
   redirect("/");
 }

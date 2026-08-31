@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 
-import { SESSION_COOKIE, isValidSessionToken } from "@/lib/session";
+import {
+  SESSION_COOKIE,
+  createSessionToken,
+  isValidSessionToken,
+  sessionCookieOptions,
+} from "@/lib/session";
 
 /**
  * Optimistic PIN gate. This is a fast cookie-signature check only — it keeps
@@ -14,9 +19,27 @@ export async function proxy(request: NextRequest) {
   if (pathname === "/login") return NextResponse.next();
 
   const token = request.cookies.get(SESSION_COOKIE)?.value;
-  if (await isValidSessionToken(token)) return NextResponse.next();
 
-  return NextResponse.redirect(new URL("/login", request.url));
+  if (!(await isValidSessionToken(token))) {
+    // Endpoints are fetched directly; a redirect would be read as success.
+    if (pathname.startsWith("/api/")) {
+      return new NextResponse(null, {
+        status: 401,
+        headers: { "Cache-Control": "no-store" },
+      });
+    }
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
+
+  // Sliding expiry: any activity pushes the deadline out, so the session only
+  // lapses after SESSION_MAX_AGE_SECONDS with no requests at all.
+  const response = NextResponse.next();
+  response.cookies.set(
+    SESSION_COOKIE,
+    await createSessionToken(),
+    sessionCookieOptions,
+  );
+  return response;
 }
 
 export const config = {

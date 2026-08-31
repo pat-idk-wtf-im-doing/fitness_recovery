@@ -12,7 +12,22 @@ import "server-only";
 import { env } from "@/lib/env";
 
 export const SESSION_COOKIE = "recovery_session";
-export const SESSION_MAX_AGE_SECONDS = 60 * 60 * 24 * 30; // 30 days
+
+/**
+ * Idle window. The session is refreshed on every request (and by the client
+ * heartbeat while the app is on screen), so this is time-since-last-activity,
+ * not a hard lifetime. Closing or backgrounding the app starts the clock.
+ */
+export const SESSION_MAX_AGE_SECONDS = 5 * 60; // 5 minutes
+
+/** Shared so the login action and the proxy refresh cannot drift apart. */
+export const sessionCookieOptions = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax",
+  path: "/",
+  maxAge: SESSION_MAX_AGE_SECONDS,
+} as const;
 
 const encoder = new TextEncoder();
 
